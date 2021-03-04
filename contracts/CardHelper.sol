@@ -10,6 +10,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract CardHelper is CardFactory {
 
+  /// @notice Retrieve cards for an owner
   function getCardsByOwner(address _owner) external view returns(uint[] memory) {
     uint[] memory result = new uint[](ownerCardCount[_owner]);
     uint counter = 0;

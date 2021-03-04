@@ -13,6 +13,7 @@ contract User is CardBattle {
   mapping (address => uint) public userWinCount;
   mapping (address => uint) public userLossCount;
 
+  /// @notice Retrieve number of wins a user has
   function getUserWins(address _user) external view returns(uint memory) {
     uint[] memory result = new uint[](userWinCount[_owner]);
     uint counter = 0;
@@ -25,6 +26,7 @@ contract User is CardBattle {
     return result;
   }
 
+  /// @notice Retrieve number of losses a user has
   function getUserLosses(address _user) external view returns(uint memory) {
     uint[] memory result = new uint[](userLossCount[_owner]);
     uint counter = 0;

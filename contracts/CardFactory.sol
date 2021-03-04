@@ -33,6 +33,7 @@ contract CardFactory is CardStructure {
   mapping (uint => address) public cardToOwner;
   mapping (address => uint) ownerCardCount;
 
+  /// @notice Owner function to modify card fee
   function setCardFee(uint _fee) external onlyOwner {
     cardFee = _fee;
   }
@@ -63,7 +64,7 @@ contract CardFactory is CardStructure {
     emit NewCard(id);
   }
 
-
+  /// @notice New users can create first card
   function createInitialCard() public {
     require(
       ownerCardCount[msg.sender] == 0,
@@ -72,6 +73,7 @@ contract CardFactory is CardStructure {
     _createCard();
   }
 
+  /// @notice Users can buy card packs of various sizes
   function buyCardPack(uint _quantity) external payable {
     require(
       msg.value == _quantity * cardFee,
