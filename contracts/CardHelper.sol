@@ -2,7 +2,7 @@
 pragma solidity ^0.6.0;
 
 import "./CardFactory.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 
 /// @title A contract for card helpers
 /// @author The Creator
@@ -11,8 +11,8 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 contract CardHelper is CardFactory {
 
   /// @notice Owner can withdraw contract balance
-  function withdraw() external onlyOwner {
-    address _owner = owner();
+  function withdraw() external payable onlyOwner {
+    address payable _owner = msg.sender;
     _owner.transfer(address(this).balance);
   }
 
@@ -39,10 +39,10 @@ contract CardHelper is CardFactory {
 
   /// @notice Retrieve overall quantity of a certain card
   function getCardsTypeCount(uint _typeId) external view returns(uint[] memory) {
-    uint[] memory result = new uint[];
+    uint[] memory result = new uint[](cards.length);
     uint counter = 0;
     for (uint i = 0; i < cards.length; i++) {
-      if (cards[i].type == _typeId) {
+      if (cards[i].cardType == _typeId) {
         result[counter] = i;
         counter++;
       }

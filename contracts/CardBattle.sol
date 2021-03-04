@@ -2,7 +2,7 @@
 pragma solidity ^0.6.0;
 
 import "./CardHelper.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 
 /// @title A contract for tracking battles
 /// @author The Creator
@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract CardBattle is CardHelper {
 
-  using SafeMath16 for uint16;
+  using SafeMath for uint16;
 
   event NewBattle(uint battleId, address attacker, address defender, uint attackingCard, uint defendingCard, address winner);
 
@@ -24,12 +24,13 @@ contract CardBattle is CardHelper {
 
   Battle[] public battles;
 
-  function _logBattle(Card storage _attackingCard, Card storage _defendingCard, uint _winner) internal {
-    address attacker = cardToOwner[_attackingCard.id];
-    address defender = cardToOwner[_defendingCard.id];
+  function _logBattle(uint _attackingCard, uint _defendingCard, uint _winner) internal {
+    address attacker = cardToOwner[_attackingCard];
+    address defender = cardToOwner[_defendingCard];
     address winner = cardToOwner[_winner];
-    uint id = battles.push(Battle(attacker, defender, _attackingCard.id, _defendingCard.id, winner)) - 1;
-    emit NewBattle(attacker, defender, _attackingCard.id, _defendingCard.id, winner);
+    battles.push(Battle(attacker, defender, _attackingCard, _defendingCard, winner));
+    uint id = battles.length - 1;
+    emit NewBattle(id, attacker, defender, _attackingCard, _defendingCard, winner);
   }
 
 }

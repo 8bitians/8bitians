@@ -2,7 +2,7 @@
 pragma solidity ^0.6.0;
 
 import "./CardStructure.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 
 /// @title A contract for generating cards
 /// @author The Creator
@@ -11,8 +11,8 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 contract CardFactory is CardStructure {
 
   using SafeMath for uint256;
-  using SafeMath32 for uint32;
-  using SafeMath16 for uint16;
+  using SafeMath for uint32;
+  using SafeMath for uint16;
 
   event NewCard(uint cardId);
 
@@ -44,7 +44,7 @@ contract CardFactory is CardStructure {
   }
 
   function generateRandomCardType() internal returns(uint) {
-    uint[] memory result = new uint[];
+    uint[] memory result = new uint[](types.length);
     uint counter = 0;
     for (uint i = 0; i < types.length; i++) {
       uint rarity = types[i].rarity;
@@ -58,14 +58,16 @@ contract CardFactory is CardStructure {
   }
 
   function _createCard() internal {
-    uint id = cards.push(Card(generateRandomCardType(), 1, uint32(now + cooldownTime), 0, 0)) - 1;
+    cards.push(Card(generateRandomCardType(), 1, uint32(now + cooldownTime), 0, 0));
+    uint id = cards.length - 1;
     cardToOwner[id] = msg.sender;
     ownerCardCount[msg.sender] = ownerCardCount[msg.sender].add(1);
     emit NewCard(id);
   }
 
   function _createCardWithType(uint _typeId) internal {
-    uint id = cards.push(Card(_typeId, 1, uint32(now + cooldownTime), 0, 0)) - 1;
+    cards.push(Card(_typeId, 1, uint32(now + cooldownTime), 0, 0));
+    uint id = cards.length - 1;
     cardToOwner[id] = msg.sender;
     ownerCardCount[msg.sender] = ownerCardCount[msg.sender].add(1);
     emit NewCard(id);

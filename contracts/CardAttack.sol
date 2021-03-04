@@ -2,7 +2,7 @@
 pragma solidity ^0.6.0;
 
 import "./User.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 
 /// @title A contract for attacking other cards
 /// @author The Creator
@@ -22,49 +22,50 @@ contract CardAttack is User {
 
     Card storage enemyCard = cards[_targetId];
 
+
     if (myCard.level != enemyCard.level) {
 
-      uint highCard = max(myCard.level, enemyCard.level);
-      uint lowCard = min(myCard.level, enemyCard.level);
+      uint highCard = myCard.level > enemyCard.level ? myCard.level : enemyCard.level;
+      uint lowCard = myCard.level < enemyCard.level ? myCard.level : enemyCard.level;
 
       require(
-        lowCard * 1.25 >= highCard,
+        lowCard + 10 >= highCard,
         "The enemy card level is out of the attack scope for your card level."
       );
 
       uint rand = randMod(myCard.level + enemyCard.level);
 
-      if (myCard.level == highCard.level) {
+      if (myCard.level == highCard) {
 
-        if (rand > lowCard.level) {
+        if (rand > lowCard) {
 
           _cardWin(myCard);
           _cardLoss(enemyCard);
-          _logBattle(myCard, enemyCard, myCard.id);
-          _cardReward(enemyCard.type);
+          _logBattle(_cardId, _targetId, _cardId);
+          _cardReward(enemyCard.cardType);
 
         } else {
 
           _cardWin(enemyCard);
           _cardLoss(myCard);
-          _logBattle(myCard, enemyCard, enemyCard.id);
+          _logBattle(_cardId, _targetId, _targetId);
 
         }
 
       } else {
 
-        if (rand <= lowCard.level) {
+        if (rand <= lowCard) {
 
           _cardWin(myCard);
           _cardLoss(enemyCard);
-          _logBattle(myCard, enemyCard, myCard.id);
-          _cardReward(enemyCard.type);
+          _logBattle(_cardId, _targetId, _cardId);
+          _cardReward(enemyCard.cardType);
 
         } else {
 
           _cardWin(enemyCard);
           _cardLoss(myCard);
-          _logBattle(myCard, enemyCard, enemyCard.id);
+          _logBattle(_cardId, _targetId, _targetId);
 
         }
 
@@ -77,12 +78,12 @@ contract CardAttack is User {
       if (rand == 1) {
         _cardWin(myCard);
         _cardLoss(enemyCard);
-        _logBattle(myCard, enemyCard, myCard.id);
-        _cardReward(enemyCard.type);
+          _logBattle(_cardId, _targetId, _cardId);
+        _cardReward(enemyCard.cardType);
       } else {
         _cardWin(enemyCard);
         _cardLoss(myCard);
-        _logBattle(myCard, enemyCard, enemyCard.id);
+          _logBattle(_cardId, _targetId, _targetId);
       }
 
     }
@@ -101,14 +102,14 @@ contract CardAttack is User {
   }
 
   function _cardWin(Card storage _card) internal {
-    _card.winCount = _card.winCount.add(1);
-    if (cardLevelUpCheck(_card.level, _card.winCount)) {
-      _card.level = _card.level.add(1);
+    _card.winCount = uint16(_card.winCount.add(1));
+    if (_cardLevelUpCheck(_card.level, _card.winCount)) {
+      _card.level = uint16(_card.level.add(1));
     }
   }
 
   function _cardLoss(Card storage _card) internal {
-    _card.lossCount = _card.lossCount.add(1);
+    _card.lossCount = uint16(_card.lossCount.add(1));
   }
 
   function _neededWins(uint _level) internal returns(uint) {
@@ -124,7 +125,7 @@ contract CardAttack is User {
   }
 
   function userLevelUpCheck(uint _level, uint _wins) internal returns(bool) {
-    if (_wins >= neededWins(_level) * 2) {
+    if (_wins >= _neededWins(_level) * 2) {
       return true;
     } else {
       return false;
