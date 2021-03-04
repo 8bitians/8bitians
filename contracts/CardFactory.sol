@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
+pragma experimental ABIEncoderV2;
 
 import "./CardStructure.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -91,6 +92,10 @@ contract CardFactory is CardStructure {
     for(uint i = 0; i < _quantity; i++) {
       _createCard();
     }
+  }
+
+  function retrieveCards() public view returns (Card[] memory) {
+    return cards;
   }
 
   modifier onlyOwnerOf(uint _cardId) {

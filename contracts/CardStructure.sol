@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -64,6 +65,14 @@ contract CardStructure is Ownable {
   function updateSeriesName(uint _seriesId, string memory _newName) external onlyOwner {
     allSeries[_seriesId].name = _newName;
     emit ChangeSeriesName(_seriesId, _newName);
+  }
+
+  function retrieveSeries() public view returns (Series[] memory) {
+    return allSeries;
+  }
+
+  function retrieveTypes() public view returns (Type[] memory) {
+    return types;
   }
 
 }
