@@ -64,6 +64,13 @@ contract CardFactory is CardStructure {
     emit NewCard(id);
   }
 
+  function _createCardWithType(uint _typeId) internal {
+    uint id = cards.push(Card(_typeId, 1, uint32(now + cooldownTime), 0, 0)) - 1;
+    cardToOwner[id] = msg.sender;
+    ownerCardCount[msg.sender] = ownerCardCount[msg.sender].add(1);
+    emit NewCard(id);
+  }
+
   /// @notice New users can create first card
   function createInitialCard() public {
     require(
@@ -82,6 +89,14 @@ contract CardFactory is CardStructure {
     for(uint i = 0; i < _quantity; i++) {
       _createCard();
     }
+  }
+
+  modifier onlyOwnerOf(uint _cardId) {
+    require(
+      msg.sender == cardToOwner[_cardId],
+      "Sender is not the card owner."
+    );
+    _;
   }
 
 }
