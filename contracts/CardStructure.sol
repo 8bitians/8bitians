@@ -16,6 +16,8 @@ contract CardStructure is Ownable {
 
   event NewType(uint typeId, string name, uint series);
   event NewSeries(uint seriesId, string name);
+  event ChangeTypeName(uint typeId, string newName);
+  event ChangeSeriesName(uint seriesId, string newName);
 
   struct Type {
     string name;
@@ -38,6 +40,16 @@ contract CardStructure is Ownable {
   function createCardSeries(string _name) external onlyOwner {
     uint id = allSeries.push(Series(_name)) - 1;
     emit NewSeries(id, _name);
+  }
+
+  function updateTypeName(uint _typeId, string _newName) external onlyOwner {
+    types[_typeId].name = _newName;
+    emit ChangeTypeName(_typeId, _newName);
+  }
+
+  function updateSeriesName(uint _seriesId, string _newName) external onlyOwner {
+    series[_seriesId].name = _newName;
+    emit ChangeSeriesName(_seriesId, _newName);
   }
 
 }
