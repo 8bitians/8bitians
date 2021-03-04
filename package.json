@@ -4,5 +4,9 @@
   "main": "index.js",
   "repository": "https://github.com/8bitians/8bitians.git",
   "author": "The Creator",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@openzeppelin/contracts": "^3.4.1",
+    "truffle": "^5.2.2"
+  }
 }
