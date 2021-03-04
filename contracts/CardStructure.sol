@@ -34,24 +34,56 @@ contract CardStructure is Ownable {
 
   /// @notice Owner can create new card types
   function createCardType(string _name, uint _seriesId, uint _rarity) external onlyOwner {
+    for (uint i = 0; i < types.length; i++) {
+      require(
+        types[i].name != _name,
+        "This type name already exists."
+      );
+    }
+    require (
+      _seriesId < allSeries.length && _seriesId >= 0,
+      "No series exists with that ID."
+    );
+    require(
+      _rarity <= 5,
+      "Invalid rarity for card. Must be 5 or less."
+    );
     uint id = types.push(Type(_name, _seriesId, _rarity)) - 1;
     emit NewType(id, _name, _series, _rarity);
   }
 
   /// @notice Owner can create new series
   function createCardSeries(string _name) external onlyOwner {
+    for (uint i = 0; i < allSeries.length; i++) {
+      require(
+        allSeries[i].name != _name,
+        "This series name already exists."
+      );
+    }
     uint id = allSeries.push(Series(_name)) - 1;
     emit NewSeries(id, _name);
   }
 
   /// @notice Owner can update type name
   function updateTypeName(uint _typeId, string _newName) external onlyOwner {
+    for (uint i = 0; i < types.length; i++) {
+      require(
+        types[i].name != _name,
+        "This type name already exists."
+      );
+    }
     types[_typeId].name = _newName;
     emit ChangeTypeName(_typeId, _newName);
   }
 
   /// @notice Owner can update series name
   function updateSeriesName(uint _seriesId, string _newName) external onlyOwner {
+    for (uint i = 0; i < allSeries.length; i++) {
+      require(
+        allSeries[i].name != _name,
+        "This series name already exists."
+      );
+    }
     series[_seriesId].name = _newName;
     emit ChangeSeriesName(_seriesId, _newName);
   }
