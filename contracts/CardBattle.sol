@@ -4,6 +4,10 @@ pragma solidity ^0.6.0;
 import "./CardHelper.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
+/// @title A contract for tracking battles
+/// @author The Creator
+/// @notice This contract logs new battles
+
 contract CardBattle is CardHelper {
 
   using SafeMath16 for uint16;

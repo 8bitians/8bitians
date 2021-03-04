@@ -4,6 +4,10 @@ pragma solidity ^0.6.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
+/// @title A contract for structuring cards
+/// @author The Creator
+/// @notice This contract creates new types and series for cards
+
 contract CardStructure is Ownable {
 
   using SafeMath for uint256;

@@ -4,6 +4,10 @@ pragma solidity ^0.6.0;
 import "./CardStructure.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
+/// @title A contract for generating cards
+/// @author The Creator
+/// @notice This contract creates new cards and packs
+
 contract CardFactory is CardStructure {
 
   using SafeMath for uint256;

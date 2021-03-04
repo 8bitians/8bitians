@@ -4,6 +4,10 @@ pragma solidity ^0.6.0;
 import "./CardBattle.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
+/// @title A contract for tracking user details
+/// @author The Creator
+/// @notice This contract tracks user stats
+
 contract User is CardBattle {
 
   mapping (address => uint) public userWinCount;

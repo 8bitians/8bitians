@@ -4,6 +4,10 @@ pragma solidity ^0.6.0;
 import "./CardFactory.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
+/// @title A contract for card helpers
+/// @author The Creator
+/// @notice This contract contains various helpers for cards
+
 contract CardHelper is CardFactory {
 
   function getCardsByOwner(address _owner) external view returns(uint[] memory) {
