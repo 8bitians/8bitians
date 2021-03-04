@@ -1,0 +1,8 @@
+{
+  "name": "8bitians",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/8bitians/8bitians.git",
+  "author": "The Creator",
+  "license": "MIT"
+}
