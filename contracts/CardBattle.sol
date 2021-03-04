@@ -12,23 +12,24 @@ contract CardBattle is CardHelper {
 
   using SafeMath16 for uint16;
 
-  event NewBattle(uint battleId);
+  event NewBattle(uint battleId, address attacker, address defender, uint attackingCard, uint defendingCard, address winner);
 
   struct Battle {
     address attacker;
     address defender;
     uint attackingCard;
     uint defendingCard;
-    uint16 attackingCardLevel;
-    uint16 defendingCardLevel;
     address winner;
   }
 
   Battle[] public battles;
 
-  function _createBattle(address _attacker, address _defender, uint _attackingCard, uint _defendingCard, uint16 _attackingCardLevel, uint16 _defendingCardLevel, address _winner) internal {
-    uint id = battles.push(Battle(_attacker, _defender, _attackingCard, _defendingCard, _attackingCardLevel, _defendingCardLevel, _winner)) - 1;
-    emit NewBattle(id);
+  function _logBattle(Card storage _attackingCard, Card storage _defendingCard, uint _winner) internal {
+    address attacker = cardToOwner[_attackingCard.id];
+    address defender = cardToOwner[_defendingCard.id];
+    address winner = cardToOwner[_winner];
+    uint id = battles.push(Battle(attacker, defender, _attackingCard.id, _defendingCard.id, winner)) - 1;
+    emit NewBattle(attacker, defender, _attackingCard.id, _defendingCard.id, winner);
   }
 
 }
