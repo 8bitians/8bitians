@@ -16,6 +16,7 @@ contract CardFactory is CardStructure {
   using SafeMath for uint16;
 
   event NewCard(uint cardId);
+  event NewCardFee(uint fee);
 
   uint cooldownTime = 864 seconds;
   uint randNonce = 0;
@@ -36,17 +37,31 @@ contract CardFactory is CardStructure {
 
   /// @notice Owner function to modify card fee
   function setCardFee(uint _fee) external onlyOwner {
-    cardFee = _fee;
+    cardFee = uint(_fee) * (1 ether);
+    emit NewCardFee(cardFee);
   }
 
   function randMod(uint _modulus) internal returns(uint) {
+    require(
+      _modulus > 0,
+      "Cannot use a zero modulus."
+    );
     randNonce = randNonce.add(1);
     return uint(keccak256(abi.encodePacked(now, msg.sender, randNonce))) % _modulus;
   }
 
   function generateRandomCardType() internal returns(uint) {
-    uint[] memory result = new uint[](types.length);
+
+    uint cardOptions = 0;
+
+    for (uint x = 0; x < types.length; x++) {
+      cardOptions = cardOptions.add(types[x].rarity);
+    }
+
+    uint[] memory result = new uint[](cardOptions);
+
     uint counter = 0;
+
     for (uint i = 0; i < types.length; i++) {
       uint rarity = types[i].rarity;
       for (uint j = 0; j < rarity; j++) {
@@ -55,11 +70,15 @@ contract CardFactory is CardStructure {
       }
     }
 
-    return result[randMod(result.length)];
+    return uint(result[randMod(result.length)]);
   }
 
   function _createCard() internal {
-    cards.push(Card(generateRandomCardType(), 1, uint32(now + cooldownTime), 0, 0));
+    require(
+      types.length > 0,
+      "There are no card types."
+    );
+    cards.push(Card(generateRandomCardType(), 1, uint32(now), 0, 0));
     uint id = cards.length - 1;
     cardToOwner[id] = msg.sender;
     ownerCardCount[msg.sender] = ownerCardCount[msg.sender].add(1);
@@ -67,6 +86,10 @@ contract CardFactory is CardStructure {
   }
 
   function _createCardWithType(uint _typeId) internal {
+    require(
+      types.length > _typeId,
+      "That type is not available."
+    );
     cards.push(Card(_typeId, 1, uint32(now + cooldownTime), 0, 0));
     uint id = cards.length - 1;
     cardToOwner[id] = msg.sender;
@@ -94,8 +117,14 @@ contract CardFactory is CardStructure {
     }
   }
 
+  /// @notice Retrieve array of all cards
   function retrieveCards() public view returns (Card[] memory) {
     return cards;
+  }
+
+  /// @notice Retrieve current card fee
+  function retrieveCardFee() public view returns (uint) {
+    return cardFee;
   }
 
   modifier onlyOwnerOf(uint _cardId) {
