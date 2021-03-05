@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
+pragma experimental ABIEncoderV2;
 
 import "./CardFactory.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
+pragma experimental ABIEncoderV2;
 
 import "./User.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -112,11 +113,11 @@ contract CardAttack is User {
     _card.lossCount = uint16(_card.lossCount.add(1));
   }
 
-  function _neededWins(uint _level) internal returns(uint) {
+  function _neededWins(uint _level) internal pure returns(uint) {
     return _level * _level.add(1) / 2;
   }
 
-  function _cardLevelUpCheck(uint _level, uint _wins) internal returns(bool) {
+  function _cardLevelUpCheck(uint _level, uint _wins) internal pure returns(bool) {
     if (_wins >= _neededWins(_level)) {
       return true;
     } else {
@@ -124,7 +125,7 @@ contract CardAttack is User {
     }
   }
 
-  function userLevelUpCheck(uint _level, uint _wins) internal returns(bool) {
+  function userLevelUpCheck(uint _level, uint _wins) internal pure returns(bool) {
     if (_wins >= _neededWins(_level) * 2) {
       return true;
     } else {
